@@ -1,95 +1,84 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>KADUNA LIFE - The Real Kaduna Game</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KADUNA LIFE v2</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
-body{background:#0f1a0f;color:white;overflow:hidden}
-#top{background:#0a7a2e;padding:10px;display:flex;justify-content:space-between;align-items:center}
-#money{font-weight:bold;background:#ffd700;color:#000;padding:6px 12px;border-radius:20px}
-#mapWrap{position:relative;width:100vw;height:calc(100vh - 110px);background:#1e331e;overflow:hidden}
-#map{position:absolute;width:2000px;height:2000px;background:radial-gradient(#2a4a2a,#122212)}
-.place{position:absolute;background:white;color:#000;padding:8px 12px;border-radius:12px;font-size:12px;font-weight:bold;box-shadow:0 4px 10px #0006;cursor:pointer;transform:translate(-50%,-50%);border:2px solid #0a7a2e}
-.place.barnawa{left:800px;top:600px;background:#ffeb3b}
-.place.malali{left:1200px;top:500px;background:#8ef}
-.place.kawo{left:700px;top:300px}
-.place.tudun{left:500px;top:900px}
-.place.ungwan{left:1000px;top:700px;background:#fcc}
-.place.sabon{left:1300px;top:900px}
-.place.market{left:900px;top:800px;background:#ff9d00;color:white}
-.place.kajuru{left:400px;top:400px;background:#a56eff;color:white}
-.place.river{left:1000px;top:1000px;background:#00bfff;color:white;width:300px;text-align:center}
-.place.stadium{left:600px;top:700px}
-.place.airport{left:300px;top:1200px}
-#player{position:absolute;left:1000px;top:800px;width:36px;height:36px;background:#ffd700;border-radius:50%;border:3px solid #000;display:flex;align-items:center;justify-content:center;font-size:20px;z-index:10;transition:0.2s}
-#controls{position:fixed;bottom:0;left:0;right:0;background:#000c;display:flex;justify-content:space-between;padding:10px;backdrop-filter:blur(10px)}
-.joy{width:120px;height:120px;position:relative}
-.joy button{position:absolute;width:38px;height:38px;border-radius:10px;border:0;background:#ffffffdd;font-weight:bold}
-#up{left:41px;top:0}#down{left:41px;bottom:0}#left{left:0;top:41px}#right{right:0;top:41px}
-#action{padding:14px 22px;background:#0a7a2e;color:white;border:0;border-radius:14px;font-weight:bold;font-size:14px}
-#missionBox{position:fixed;top:60px;left:10px;background:#000d;padding:12px;border-radius:12px;font-size:13px;max-width:220px;border-left:4px solid #0a7a2e}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#111;overflow:hidden}
+#header{background:linear-gradient(90deg,#2d2d6e,#1a1a4a);padding:10px 12px;display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #ffb700}
+#logo{font-weight:900;font-size:22px;color:#ffb700;text-shadow:2px 2px 0 #000}
+#logo span{color:#fff}
+#stats{display:flex;gap:8px}
+.stat{background:#ffb700;color:#000;padding:6px 12px;border-radius:20px;font-weight:900;display:flex;gap:4px;align-items:center}
+#gameArea{width:100vw;height:calc(100vh - 60px);position:relative;overflow:hidden;background:#a8d8a8}
+#world{position:absolute;width:2200px;height:2200px;transition:0.3s}
+.river{position:absolute;background:#4da6ff;border-radius:40px}
+.land{position:absolute;background:#8fcf8f;border-radius:20px}
+.placeCard{position:absolute;background:white;border-radius:16px;padding:10px;box-shadow:0 6px 0 #000,0 10px 20px #0005;min-width:130px;text-align:center;transform:translate(-50%,-50%);border:3px solid #000;cursor:pointer}
+.placeCard .icon{font-size:26px}
+.placeCard .name{font-weight:900;font-size:14px;margin-top:4px;color:#000}
+.placeCard .sub{font-size:10px;color:#555}
+#playerWrap{position:absolute;left:1100px;top:1100px;z-index:20;transform:translate(-50%,-50%);transition:0.2s}
+#playerBox{width:62px;height:38px;background:#ffcc00;border:3px solid #000;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 4px 0 #000}
+#shadow{width:50px;height:12px;background:#0005;border-radius:50%;margin:4px auto 0}
+#controls{position:fixed;bottom:0;left:0;right:0;height:110px;background:linear-gradient(transparent,#000a);display:flex;justify-content:space-between;align-items:flex-end;padding:10px;z-index:30}
+#joystick{width:100px;height:100px;background:#ffffff44;border-radius:50%;border:3px solid #fff;position:relative;backdrop-filter:blur(10px)}
+#joyBtn{position:absolute;width:32px;height:32px;background:white;border-radius:50%;border:2px solid #000;display:flex;align-items:center;justify-content:center;font-weight:bold;cursor:pointer}
+#btnBox{display:flex;gap:8px}
+.bigBtn{padding:12px 16px;border-radius:14px;border:3px solid #000;font-weight:900;box-shadow:0 4px 0 #000}
+#deliver{background:#ffb700}#mission{background:#4cff7a}
+#missionPanel{position:fixed;top:65px;left:10px;background:#fffffff0;padding:10px;border-radius:12px;border:3px solid #000;max-width:200px;box-shadow:0 6px 0 #000}
 </style>
 </head>
 <body>
-<div id="top">
-<div><b>🏙️ KADUNA LIFE</b> <span style="font-size:11px">v1.0 by Bello Farouq</span></div>
-<div id="money">₦<span id="cash">500</span></div>
-</div>
+<div id="header"><div id="logo">🏔️ KADUNA <span>LIFE</span></div><div id="stats"><div class="stat">₦ <span id="cash">500</span></div><div class="stat">⛽ <span id="fuel">78</span>%</div></div></div>
 
-<div id="missionBox">
-<b>Mission:</b> <span id="missionText">Go to Barnawa & find house!</span><br><br>
-<small>📍 Explore ALL Kaduna: Tap places or use arrows</small>
-</div>
+<div id="missionPanel"><b style="font-size:12px">🎯 MISSION:</b><div id="missionText" style="font-size:13px;font-weight:700;margin-top:4px">Go to Barnawa to find first house!</div><div style="margin-top:6px;font-size:10px;background:#0a7a2e;color:white;padding:4px;border-radius:6px">Opay: 8160851914 Bello Farouq</div></div>
 
-<div id="mapWrap">
-<div id="map">
-<div class="place barnawa" onclick="visit('Barnawa')">🏠 Barnawa</div>
-<div class="place malali" onclick="visit('Malali')">🏡 Malali G.R.A</div>
-<div class="place kawo" onclick="visit('Kawo')">🛣️ Kawo</div>
-<div class="place tudun" onclick="visit('Tudun Wada')">🏘️ Tudun Wada</div>
-<div class="place ungwan" onclick="visit('Ungwan Rimi')">🏛️ Ungwan Rimi</div>
-<div class="place sabon" onclick="visit('Sabon Tasha')">🏚️ Sabon Tasha</div>
-<div class="place market" onclick="visit('Central Market')">🛒 Central Market</div>
-<div class="place kajuru" onclick="visit('Kajuru Castle')">🏰 Kajuru Castle</div>
-<div class="place river" onclick="visit('Kaduna River')">🌊 Kaduna River</div>
-<div class="place stadium" onclick="visit('Ahmadu Bello Stadium')">⚽ ABS Stadium</div>
-<div class="place airport" onclick="visit('Kaduna Airport')">✈️ Airport</div>
-<div class="place" style="left:1100px;top:400px" onclick="visit('Fifth Chukker')">🐎 Fifth Chukker</div>
-<div class="place" style="left:900px;top:300px" onclick="visit('Millennium City')">🏙️ Millennium City</div>
-<div class="place" style="left:1400px;top:600px" onclick="visit('Refinery Road')">🏭 Refinery</div>
-<div id="player">🛺</div>
-</div>
-</div>
+<div id="gameArea"><div id="world">
+<div class="land" style="left:0;top:0;width:2200px;height:2200px;background:#c8e6c9"></div>
+<div class="river" style="left:1000px;top:0;width:120px;height:2200px;transform:rotate(5deg)"></div>
+<div class="river" style="left:600px;top:1100px;width:800px;height:80px"></div>
+
+<div class="placeCard" style="left:400px;top:400px;background:#ffe082" onclick="goPlace('Malali',400,400)"><div class="icon">🏡</div><div class="name">Malali</div><div class="sub">GRA - Big Men</div></div>
+<div class="placeCard" style="left:350px;top:900px;background:#b2ebf2" onclick="goPlace('Barnawa',350,900)"><div class="icon">🏠</div><div class="name">Barnawa</div><div class="sub">Houses for Rent</div></div>
+<div class="placeCard" style="left:800px;top:300px;background:#d1c4e9" onclick="goPlace('Kawo',800,300)"><div class="icon">🚌</div><div class="name">Kawo</div><div class="sub">Motor Park</div></div>
+<div class="placeCard" style="left:1300px;top:600px;background:#ffccbc" onclick="goPlace('Kajuru Castle',1300,600)"><div class="icon">🏰</div><div class="name">Kajuru Castle</div><div class="sub">Tourist - Ticket ₦500</div></div>
+<div class="placeCard" style="left:1400px;top:1000px;background:#fff9c4" onclick="goPlace('Central Market',1400,1000)"><div class="icon">🛒</div><div class="name">Central Market</div><div class="sub">Hustle Money</div></div>
+<div class="placeCard" style="left:600px;top:1300px;background:#c8e6c9" onclick="goPlace('Sabon Tasha',600,1300)"><div class="icon">🏚️</div><div class="name">Sabon Tasha</div><div class="sub">Cheap Houses</div></div>
+<div class="placeCard" style="left:1100px;top:1400px;background:#ffcdd2" onclick="goPlace('Tudun Wada',1100,1400)"><div class="icon">🏘️</div><div class="name">Tudun Wada</div><div class="sub">Street Life</div></div>
+<div class="placeCard" style="left:1700px;top:400px;background:#b0bec5" onclick="goPlace('Fifth Chukker',1700,400)"><div class="icon">🐎</div><div class="name">Fifth Chukker</div><div class="sub">Polo & Rich</div></div>
+<div class="placeCard" style="left:300px;top:1600px;background:#b2dfdb" onclick="goPlace('Kaduna Airport',300,1600)"><div class="icon">✈️</div><div class="name">Airport</div><div class="sub">Travel</div></div>
+<div class="placeCard" style="left:900px;top:800px;background:#ffab91" onclick="goPlace('Ahmadu Bello Stadium',900,800)"><div class="icon">⚽</div><div class="name">ABS Stadium</div><div class="sub">Football</div></div>
+
+<div id="playerWrap"><div id="playerBox">🛺</div><div id="shadow"></div></div>
+</div></div>
 
 <div id="controls">
-<div class="joy">
-<button id="up" ontouchstart="move(0,-30)" onmousedown="move(0,-30)">↑</button>
-<button id="down" ontouchstart="move(0,30)" onmousedown="move(0,30)">↓</button>
-<button id="left" ontouchstart="move(-30,0)" onmousedown="move(-30,0)">←</button>
-<button id="right" ontouchstart="move(30,0)" onmousedown="move(30,0)">→</button>
+<div id="joystick">
+<div id="joyBtn" style="left:34px;top:2px" ontouchstart="mv(0,-1)" onmousedown="mv(0,-1)">▲</div>
+<div id="joyBtn" style="left:34px;bottom:2px" ontouchstart="mv(0,1)" onmousedown="mv(0,1)">▼</div>
+<div id="joyBtn" style="left:2px;top:34px" ontouchstart="mv(-1,0)" onmousedown="mv(-1,0)">◀</div>
+<div id="joyBtn" style="right:2px;top:34px" ontouchstart="mv(1,0)" onmousedown="mv(1,0)">▶</div>
 </div>
-<div style="display:flex;gap:8px;align-items:center">
-<button id="action" onclick="doJob()">Work: Okada ₦200</button>
+<div id="btnBox">
+<button class="bigBtn" id="deliver" onclick="work()">💼 WORK +₦200</button>
+<button class="bigBtn" id="mission" onclick="nextM()">MISSIONS</button>
 </div>
 </div>
 
 <script>
-let x=1000,y=800,cash=500;
-const player=document.getElementById('player');
-const map=document.getElementById('map');
-const cashEl=document.getElementById('cash');
-const missions=["Go to Barnawa & find house!","Go to Kawo & buy Suya!","Visit Kajuru Castle - Tourist!","Go to Central Market to hustle!","Go to Kaduna River - Pray!","Go to ABS Stadium - Watch Match!","Go to Airport - Welcome visitor!","Go to Ungwan Rimi - Big man house!"];
-let mi=0;
-function updatePos(){player.style.left=x+'px';player.style.top=y+'px';map.style.left= (window.innerWidth/2 - x) +'px';map.style.top= (window.innerHeight/2 - y) +'px';}
-function move(dx,dy){x+=dx;y+=dy;if(x<100)x=100;if(x>1900)x=1900;if(y<100)y=100;if(y>1900)y=1900;updatePos();checkNear();}
-function visit(placeName){alert('📍 You are in '+placeName+'\n\nWelcome to '+placeName+', Kaduna!\n\nYou gained ₦100 for exploring!');cash+=100;cashEl.innerText=cash;nextMission();}
-function checkNear(){}
-function nextMission(){mi=(mi+1)%missions.length;document.getElementById('missionText').innerText=missions[mi];}
-function doJob(){cash+=200;cashEl.innerText=cash;player.innerText='💨';setTimeout(()=>player.innerText='🛺',400);if(cash>2000){document.getElementById('missionBox').innerHTML='<b>🎉 ALHAMDULILLAH!</b><br>You don blow! You get ₦'+cash+'<br><br>Pay to unlock full game:<br><b>Opay 8160851914 Bello Farouq</b><br><br><a href=https://wa.me/2348160851914?text=I%20play%20KADUNA%20LIFE%20game%20and%20I%20have%20₦'+cash+' style=color:#0a7a2e>WhatsApp Bello</a>';}}
-updatePos();
-setInterval(()=>{cash+=5;cashEl.innerText=cash},5000);
+let px=1100,py=1100,cash=500,fuel=78;
+const world=document.getElementById('world');
+const pWrap=document.getElementById('playerWrap');
+function updateCam(){world.style.left=(window.innerWidth/2 - px)+'px';world.style.top=(window.innerHeight/2 - py + 30)+'px';}
+function mv(dx,dy){px+=dx*40;py+=dy*40;fuel-=0.3;if(fuel<0)fuel=0;px=Math.max(100,Math.min(2100,px));py=Math.max(100,Math.min(2100,py));pWrap.style.left=px+'px';pWrap.style.top=py+'px';updateCam();document.getElementById('fuel').innerText=Math.floor(fuel);}
+function goPlace(name,x,y){px=x;py=y;pWrap.style.left=px+'px';pWrap.style.top=py+'px';updateCam();cash+=150;document.getElementById('cash').innerText=cash;document.getElementById('missionText').innerText='You are in '+name+'! '+name+' explored! +₦150';if(cash>3000){document.getElementById('missionPanel').innerHTML='<b>🎉 YOU DON BLOW!</b><br>₦'+cash+'<br><br>Unlock full Kaduna Life with 50 more places!<br>Pay Opay: <b>8160851914 Bello Farouq</b><br><br><a href=https://wa.me/2348160851914?text=I%20play%20KADUNA%20LIFE%20₦'+cash+' style=background:#0a7a2e;color:white;padding:6px;border-radius:8px;text-decoration:none>WhatsApp Bello</a>';}}
+function work(){cash+=200;fuel-=2;document.getElementById('cash').innerText=cash;document.getElementById('fuel').innerText=Math.floor(fuel);pWrap.firstChild.innerText='💨';setTimeout(()=>pWrap.firstChild.innerText='🛺',300);}
+function nextM(){const ms=['Go to Barnawa - House dey there!','Go to Kawo - Suya joint!','Visit Kajuru Castle','Go to Central Market - Make money','Go to Malali - Big man house'];document.getElementById('missionText').innerText=ms[Math.floor(Math.random()*ms.length)];}
+updateCam();
 </script>
 </body>
 </html>
